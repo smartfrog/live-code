@@ -28,6 +28,13 @@ export interface RotiFeedbackRecord {
   createdAt: string;
 }
 
+interface RotiFeedbackRow {
+  id: number;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
+
 export function insertFeedback(input: { rating: number; comment: string }): RotiFeedbackRecord {
   const createdAt = new Date().toISOString();
   const statement = db.prepare(
@@ -48,7 +55,7 @@ export function listFeedbacks(): RotiFeedbackRecord[] {
     .prepare(
       "SELECT id, rating, comment, created_at as createdAt FROM roti_feedback ORDER BY datetime(created_at) DESC"
     )
-    .all();
+    .all() as RotiFeedbackRow[];
 
   return rows.map((row) => ({
     id: Number(row.id),
