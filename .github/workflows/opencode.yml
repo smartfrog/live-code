@@ -16,6 +16,7 @@ jobs:
       contents: read
       pull-requests: read
       issues: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
       - uses: anomalyco/opencode/github@latest
