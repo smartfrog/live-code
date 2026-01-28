@@ -2,6 +2,8 @@ import express, { Request, Response } from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 
+import feedbacksRouter from "./routes/feedbacks.js";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -13,9 +15,7 @@ app.get("/api/health", (_req: Request, res: Response) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
-app.get("/api/hello", (_req: Request, res: Response) => {
-  res.json({ message: "Hello from backend!", env: process.env.NODE_ENV || "development" });
-});
+app.use("/api/feedbacks", feedbacksRouter);
 
 // Serve frontend static files
 const frontendPath = path.join(__dirname, "../../frontend/dist");
