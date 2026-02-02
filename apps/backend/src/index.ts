@@ -1,6 +1,9 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
+
+import feedbacksRouter from "./routes/feedbacks.js";
+import statsRouter from "./routes/stats.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -9,20 +12,19 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 
 // API routes
-app.get("/api/health", (_req: Request, res: Response) => {
+app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
-app.get("/api/hello", (_req: Request, res: Response) => {
-  res.json({ message: "Hello from backend!", env: process.env.NODE_ENV || "development" });
-});
+app.use("/api/feedbacks", feedbacksRouter);
+app.use("/api/stats", statsRouter);
 
 // Serve frontend static files
 const frontendPath = path.join(__dirname, "../../frontend/dist");
 app.use(express.static(frontendPath));
 
 // SPA fallback
-app.get("*", (_req: Request, res: Response) => {
+app.get("*", (_req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
 

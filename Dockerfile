@@ -21,6 +21,10 @@ COPY apps/backend/package*.json ./apps/backend/
 RUN cd apps/backend && npm install --omit=dev
 COPY --from=backend /app/backend/dist ./apps/backend/dist
 COPY --from=frontend /app/frontend/dist ./apps/frontend/dist
+
+# Create data directory for SQLite with proper permissions
+RUN mkdir -p /app/apps/backend/data && chown -R node:node /app/apps/backend/data
+
 ENV NODE_ENV=production
 ENV PORT=3001
 EXPOSE 3001
