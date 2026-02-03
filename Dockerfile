@@ -17,13 +17,21 @@ RUN npm run build
 # Production
 FROM node:20-alpine
 WORKDIR /app
+
+# Create data directory with proper permissions BEFORE switching to node user
+RUN mkdir -p /app/data && chown -R node:node /app/data
+
 COPY apps/backend/package*.json ./apps/backend/
 RUN cd apps/backend && npm install --omit=dev
 COPY --from=backend /app/backend/dist ./apps/backend/dist
 COPY --from=frontend /app/frontend/dist ./apps/frontend/dist
+
 ENV NODE_ENV=production
 ENV PORT=3001
+ENV DATA_DIR=/app/data
+
 EXPOSE 3001
+
 USER node
 WORKDIR /app/apps/backend
 CMD ["node", "dist/index.js"]
